@@ -1,14 +1,14 @@
 /*
- * VHC Universal Remote v0.4.0
+ * VHC Universal Remote v0.4.1
  * Created by VonHoltenCodes
  * Development collaboration by Claude Code
  * 
  * A touchscreen universal IR remote using Teensy 4.1
  * Features:
- * - Retro red-on-black terminal aesthetic
+ * - Retro red-on-black terminal aesthetic with ASCII art
  * - IRDB database format exclusively (thousands of devices)
  * - Extended protocol support (NEC, Sony, RC5, RC6, Panasonic, JVC)
- * - Graphical animated logo
+ * - Clean ASCII-style UI with VHC branding
  * - Modular architecture for easy customization
  * - Simple SD card device management
  * 

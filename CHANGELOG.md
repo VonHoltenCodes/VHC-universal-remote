@@ -10,6 +10,19 @@ All notable changes to this project will be documented in this file.
 - Memory usage analysis
 - User experience improvements
 
+## [0.4.1] - 2024-06-25
+### Changed - UI Redesign
+- Returned to original ASCII-style design concept
+- Clean splash screen with ASCII VHC logo
+- Consistent VHC/UR branding in header
+- ASCII-style button borders
+- Triangle arrows for volume/channel controls
+- Simplified, cleaner interface throughout
+
+### Removed
+- Graphical block logo animation
+- Complex logo styles
+
 ## [0.4.0] - 2024-06-25
 ### Changed - IRDB Only Implementation
 - Removed original CSV format support entirely
