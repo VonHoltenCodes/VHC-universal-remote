@@ -3,7 +3,7 @@
  */
 
 #include "menu.h"
-#include <SD.h>
+#include "sd_manager.h"
 
 // Global menu instance
 Menu menu;
@@ -46,64 +46,13 @@ bool Menu::isTimeToAdvance() {
 }
 
 int Menu::loadDevices() {
-  deviceCount = 0;
+  // Use the SD manager to load devices
+  deviceCount = sdManager.loadDevices(devices, MAX_DEVICES);
   
-  File file = SD.open(IR_CODES_FILE);
-  if (!file) {
+  if (deviceCount < 0) {
     setError(ERROR_NO_SD);
     return -1;
   }
-  
-  char line[128];
-  int lineIndex = 0;
-  Device* currentDevice = nullptr;
-  char lastDeviceName[32] = "";
-  
-  while (file.available() && deviceCount < MAX_DEVICES) {
-    char c = file.read();
-    
-    if (c == '\n' || c == '\r') {
-      if (lineIndex > 0 && line[0] != '#') { // Skip comments
-        line[lineIndex] = '\0';
-        
-        // Parse CSV line
-        char* deviceName = strtok(line, ",");
-        char* command = strtok(nullptr, ",");
-        char* code = strtok(nullptr, ",");
-        char* protocol = strtok(nullptr, ",");
-        
-        if (deviceName && command && code && protocol) {
-          // Check if this is a new device
-          if (strcmp(deviceName, lastDeviceName) != 0) {
-            if (currentDevice) deviceCount++;
-            currentDevice = &devices[deviceCount];
-            strncpy(currentDevice->name, deviceName, 31);
-            currentDevice->name[31] = '\0';
-            currentDevice->commandCount = 0;
-            strncpy(lastDeviceName, deviceName, 31);
-          }
-          
-          // Add command to current device
-          if (currentDevice && currentDevice->commandCount < MAX_COMMANDS) {
-            IRCommand* cmd = &currentDevice->commands[currentDevice->commandCount];
-            strncpy(cmd->command, command, 15);
-            cmd->command[15] = '\0';
-            cmd->code = strtoul(code, nullptr, 16);
-            strncpy(cmd->protocol, protocol, 7);
-            cmd->protocol[7] = '\0';
-            currentDevice->commandCount++;
-          }
-        }
-      }
-      lineIndex = 0;
-    } else if (lineIndex < 127) {
-      line[lineIndex++] = c;
-    }
-  }
-  
-  if (currentDevice) deviceCount++;
-  
-  file.close();
   
   if (deviceCount == 0) {
     setError(ERROR_NO_DEVICES);

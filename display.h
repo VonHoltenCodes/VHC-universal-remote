@@ -10,6 +10,8 @@
 #include <Adafruit_ILI9341.h>
 #include "config.h"
 #include "ascii_art.h"
+#include "ui_icons.h"
+#include "logo_graphics.h"
 
 class Display {
 private:
@@ -26,7 +28,12 @@ public:
   void drawText(int x, int y, const char* text, uint16_t color = COLOR_TEXT, int size = 1);
   void drawCenteredText(int y, const char* text, uint16_t color = COLOR_TEXT, int size = 1);
   void drawButton(int x, int y, int w, int h, const char* label, bool pressed = false);
+  void drawIconButton(int x, int y, int w, int h, void (*drawIcon)(Adafruit_GFX*, int, int, int, uint16_t), bool pressed = false);
   void drawLogo(int x, int y, bool small = true);
+  
+  // Animated logo drawing
+  void drawAnimatedLogo(int centerX, int centerY, int frame, int totalFrames);
+  void animateSplashScreen(int durationMs = 2000);
   
   // Screen-specific drawing functions
   void drawSplashScreen();
@@ -42,9 +49,19 @@ public:
   void drawProgressBar(int x, int y, int width, int progress, int total);
   void updateLoadingAnimation(int frame);
   
+  // Icon wrappers for common buttons
+  void drawVolumeUpButton(int x, int y, int w, int h, bool pressed = false);
+  void drawVolumeDownButton(int x, int y, int w, int h, bool pressed = false);
+  void drawChannelUpButton(int x, int y, int w, int h, bool pressed = false);
+  void drawChannelDownButton(int x, int y, int w, int h, bool pressed = false);
+  void drawInputButton(int x, int y, int w, int h, bool pressed = false);
+  
   // Utility functions
   void setBacklight(uint8_t brightness);
   void flash(uint16_t color = ILI9341_WHITE, int duration = 50);
+  
+  // Get the display object for direct drawing
+  Adafruit_ILI9341* getDisplay() { return tft; }
 };
 
 #endif // DISPLAY_H

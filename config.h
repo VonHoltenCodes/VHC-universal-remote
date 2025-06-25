@@ -43,6 +43,7 @@
 
 // Timing constants
 #define SPLASH_DURATION  5000  // 5 seconds
+#define SPLASH_ANIMATION 2000  // 2 second logo animation
 #define REPEAT_DELAY     200   // Button repeat delay in ms
 #define DEBOUNCE_DELAY   50    // Touch debounce
 
@@ -51,13 +52,15 @@
 #define MAX_DEVICES      20
 #define MAX_COMMANDS     10
 
-// File paths
-#define IR_CODES_FILE    "ircodes.csv"
+// File paths (IRDB format only)
 #define CONFIG_FILE      "config.txt"
 
 // Debug settings
 #define DEBUG_SERIAL     1    // Enable serial debug output
 #define DEBUG_TOUCH      0    // Show touch coordinates
 #define DEBUG_IR         0    // Show IR codes being sent
+
+// Logo style selection (0=Block text, 1=Modern, 2=Minimal, 3=Graphical blocks)
+#define LOGO_STYLE       3    // Change this to select different logo styles
 
 #endif // CONFIG_H

@@ -1,10 +1,18 @@
 /*
- * VHC Universal Remote
+ * VHC Universal Remote v0.4.0
  * Created by VonHoltenCodes
  * Development collaboration by Claude Code
  * 
  * A touchscreen universal IR remote using Teensy 4.1
- * Features retro red-on-black terminal aesthetic
+ * Features:
+ * - Retro red-on-black terminal aesthetic
+ * - IRDB database format exclusively (thousands of devices)
+ * - Extended protocol support (NEC, Sony, RC5, RC6, Panasonic, JVC)
+ * - Graphical animated logo
+ * - Modular architecture for easy customization
+ * - Simple SD card device management
+ * 
+ * Repository: https://github.com/VonHoltenCodes/VHC-universal-remote
  */
 
 #include <SPI.h>
@@ -14,6 +22,7 @@
 #include "menu.h"
 #include "ir_handler.h"
 #include "touch_input.h"
+#include "sd_manager.h"
 
 // Module instances
 Display display;
@@ -42,9 +51,9 @@ void setup() {
   display.drawSplashScreen();
   Serial.println(F("OK"));
   
-  // Initialize SD card
+  // Initialize SD card manager
   Serial.print(F("SD Card... "));
-  if (!SD.begin(SD_CS)) {
+  if (!sdManager.begin()) {
     Serial.println(F("FAILED"));
     display.drawErrorScreen(ERROR_NO_SD);
     while (1) {

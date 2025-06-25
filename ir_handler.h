@@ -29,7 +29,10 @@ public:
   // Protocol-specific sending
   bool sendNEC(unsigned long code, int bits = 32);
   bool sendSony(unsigned long code, int bits = 12);
-  bool sendRC5(unsigned long code, int bits = 12);
+  bool sendRC5(unsigned long code, int bits = 13);
+  bool sendRC6(unsigned long code, int bits = 16);
+  bool sendPanasonic(unsigned long code, int bits = 48);
+  bool sendJVC(unsigned long code, int bits = 16);
   
   // Utility functions
   bool canRepeat(); // Check if enough time has passed for repeat

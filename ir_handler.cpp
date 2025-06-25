@@ -56,13 +56,26 @@ bool IRHandler::sendCommand(IRCommand* cmd) {
   
   bool success = false;
   
-  // Send based on protocol
-  if (strcmp(cmd->protocol, "NEC") == 0) {
+  // Send based on protocol (handles both original and IRDB converted protocols)
+  if (strcmp(cmd->protocol, "NEC") == 0 || strcmp(cmd->protocol, "SAMSUNG") == 0) {
     success = sendNEC(cmd->code);
-  } else if (strcmp(cmd->protocol, "Sony") == 0) {
-    success = sendSony(cmd->code);
+  } else if (strcmp(cmd->protocol, "Sony") == 0 || 
+             strcmp(cmd->protocol, "SONY12") == 0 ||
+             strcmp(cmd->protocol, "SONY15") == 0 ||
+             strcmp(cmd->protocol, "SONY20") == 0) {
+    // Determine bit count from protocol name or code value
+    int bits = 12; // default
+    if (strcmp(cmd->protocol, "SONY15") == 0 || cmd->code > 0xFFF) bits = 15;
+    if (strcmp(cmd->protocol, "SONY20") == 0 || cmd->code > 0x7FFF) bits = 20;
+    success = sendSony(cmd->code, bits);
   } else if (strcmp(cmd->protocol, "RC5") == 0) {
     success = sendRC5(cmd->code);
+  } else if (strcmp(cmd->protocol, "RC6") == 0) {
+    success = sendRC6(cmd->code);
+  } else if (strcmp(cmd->protocol, "PANASONIC") == 0) {
+    success = sendPanasonic(cmd->code);
+  } else if (strcmp(cmd->protocol, "JVC") == 0) {
+    success = sendJVC(cmd->code);
   } else {
     setError("Unknown protocol");
     return false;
@@ -116,6 +129,55 @@ bool IRHandler::sendRC5(unsigned long code, int bits) {
   
   #if DEBUG_IR
     Serial.print(F("RC5 sent: 0x"));
+    Serial.println(code, HEX);
+  #endif
+  
+  return true;
+}
+
+bool IRHandler::sendRC6(unsigned long code, int bits) {
+  if (!initialized) return false;
+  
+  irsend->sendRC6(code, bits);
+  
+  #if DEBUG_IR
+    Serial.print(F("RC6 sent: 0x"));
+    Serial.println(code, HEX);
+  #endif
+  
+  return true;
+}
+
+bool IRHandler::sendPanasonic(unsigned long code, int bits) {
+  if (!initialized) return false;
+  
+  // Panasonic uses 48-bit codes, IRremote expects address and command separately
+  // For IRDB converted codes, we need to extract them
+  uint16_t address = (code >> 32) & 0xFFFF; // Upper 16 bits
+  uint32_t command = code & 0xFFFFFFFF; // Lower 32 bits
+  
+  irsend->sendPanasonic(address, command);
+  
+  #if DEBUG_IR
+    Serial.print(F("Panasonic sent: addr=0x"));
+    Serial.print(address, HEX);
+    Serial.print(F(" cmd=0x"));
+    Serial.println(command, HEX);
+  #endif
+  
+  return true;
+}
+
+bool IRHandler::sendJVC(unsigned long code, int bits) {
+  if (!initialized) return false;
+  
+  // JVC requires sending the code once, then repeating without header
+  irsend->sendJVC(code, bits, false); // First send with header
+  delay(50);
+  irsend->sendJVC(code, bits, true);  // Repeat without header
+  
+  #if DEBUG_IR
+    Serial.print(F("JVC sent: 0x"));
     Serial.println(code, HEX);
   #endif
   
