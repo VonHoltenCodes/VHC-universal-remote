@@ -1,0 +1,26 @@
+# VHC Universal Remote - IR Codes Template
+# Format: device,command,code,protocol
+# Supported protocols: NEC, Sony, RC5
+# Codes in hexadecimal format (0x prefix)
+#
+# Example devices below - replace with your actual device codes
+Samsung TV,power,0xE0E040BF,NEC
+Samsung TV,volUp,0xE0E0E01F,NEC
+Samsung TV,volDown,0xE0E0D02F,NEC
+Samsung TV,chUp,0xE0E048B7,NEC
+Samsung TV,chDown,0xE0E008F7,NEC
+Samsung TV,input,0xE0E0807F,NEC
+Sony VCR,power,0xA90,Sony
+Sony VCR,play,0x490,Sony
+Sony VCR,stop,0x090,Sony
+Sony VCR,pause,0x990,Sony
+Sony VCR,rewind,0xD90,Sony
+Sony VCR,forward,0x390,Sony
+LG Soundbar,power,0x20DF10EF,NEC
+LG Soundbar,volUp,0x20DF40BF,NEC
+LG Soundbar,volDown,0x20DFC03F,NEC
+LG Soundbar,input,0x20DF906F,NEC
+Generic DVD,power,0x10EF08F7,NEC
+Generic DVD,play,0x10EF58A7,NEC
+Generic DVD,stop,0x10EF00FF,NEC
+Generic DVD,menu,0x10EF9867,NEC
